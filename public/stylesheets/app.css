@@ -1,0 +1,9 @@
+.date{
+	font-style: italic;
+	font-size: 0.9em;
+}
+
+.delete-form{
+	display: inline-block;
+	margin:0 5px;
+}
