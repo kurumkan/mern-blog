@@ -18,6 +18,17 @@ module.exports = React.createClass({
 				console.log("error", error.message)								
 		});		
 	},
+
+	handleDelete: function(e){
+		console.log("handleDelete")		
+		api.deleteBlogpost(this.props.params.id)
+		.then(function(id){					
+			window.location.hash="#/";								
+		}, function(error){	
+			window.location.hash="#/";													
+		});		
+	},
+
 	render: function(){	
 	    var blog = this.state.blog;	
 		if(!blog)
@@ -38,10 +49,8 @@ module.exports = React.createClass({
 							</p>
 						</div>
 						<div className="panel-footer text-right">
-							<a href={"/blogs/"+_id+"/edit"} className="btn btn-default">Edit</a>	
-							<form  className="delete-form" method="POST" action={"/api/blogs/"+_id+"?_method=DELETE"}>
-								<button className="btn btn-danger">Delete</button>
-							</form>							
+							<a href={"/#/blogs/"+_id+"/edit"} className="btn btn-default">Edit</a>	
+							<button className="btn btn-danger" onClick={this.handleDelete} >Delete</button>							
 						</div>
 					</div>	
 				</div>

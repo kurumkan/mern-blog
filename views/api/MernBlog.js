@@ -26,6 +26,28 @@ module.exports = {
 				throw new Error("Server Error");
 			});
 		
-	} 
+	},
+	updateBlogpost: function(id, updatedBlog){
+		var requestUrl = "/api/blogs/"+id;							
+		return axios.put(requestUrl, updatedBlog)
+			.then(function(response){					
+				return response.data.id;			
+			},function(response){			
+				throw new Error("Server Error");
+			});
+		
+	},
+	deleteBlogpost: function(id){
+		console.log("deleteBlogpost")
+		var requestUrl = "/api/blogs/"+id;							
+		return axios.delete(requestUrl)
+			.then(function(response){					
+				return response.data.id;			
+			},function(response){			
+				throw new Error("Server Error");
+			});
+		
+	}    
+
 }
 

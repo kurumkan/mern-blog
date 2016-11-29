@@ -105,41 +105,33 @@ app.post("/api/blogs", function(request, response){
 });
 
 
-// app.get("/blogs/:id/edit", function(request, response){	
-// 	Blog.findById(request.params.id, function(error, blog){
-// 		if(error)
-// 			handle500(error);
-// 		else
-// 			response.render("edit",{blog: blog});			
-// 	});	
-// });
+app.put("/api/blogs/:id", function(request, response){		
+	var id = request.params.id;		
+	var body = {
+		title: request.sanitize(request.body.title),
+		image: request.sanitize(request.body.image),
+		body: request.sanitize(request.body.body)
+	}
 
-// app.put("/blogs/:id", function(request, response){	
-// 	var id = request.params.id;		
-// 	var body = {
-// 		title: request.sanitize(request.body.title),
-// 		image: request.sanitize(request.body.image),
-// 		body: request.sanitize(request.body.body)
-// 	}
+	Blog.findByIdAndUpdate(id, body, function(error, blog){
+		if(error)
+			handle500(error);
+		else{			
+			response.json({id: blog._id});				
+		}
+	});
+});
 
-// 	Blog.findByIdAndUpdate(id, body, function(error, blog){
-// 		if(error)
-// 			handle500(error);
-// 		else
-// 			response.redirect("/blogs/"+id);
-// 	});
-// });
+app.delete("/api/blogs/:id", function(request, response){	
+	var id = request.params.id;			
 
-// app.delete("/blogs/:id", function(request, response){	
-// 	var id = request.params.id;			
-
-// 	Blog.findByIdAndRemove(id, function(error){
-// 		if(error)
-// 			handle500(error);
-// 		else
-// 			response.redirect("/blogs");
-// 	});
-// });
+	Blog.findByIdAndRemove(id, function(error){
+		if(error)
+			handle500(error);
+		else
+			response.json({id: id});				
+	});
+});
 
 
 // app.use(function(request, response){	
