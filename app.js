@@ -4,6 +4,7 @@ var bodyParser = require("body-parser");
 var  methodOverride = require("method-override");
 var mongoose = require("mongoose");
 var expressSanitizer = require("express-sanitizer");
+var {handle500} = require("./lib/utils");
 
 mongoose.connect("mongodb://localhost/blog-react");
 
@@ -28,46 +29,10 @@ var blogSchema = new mongoose.Schema({
 
 var Blog = mongoose.model("Blog", blogSchema);
 
-
-function createDummyData(){
-	var blogs = [
-	{title: "title1", body: "body1", image: "https://pp.vk.me/c636825/v636825284/32767/VsYbJXx9gv0.jpg"},
-	{title: "title2", body: "body2", image: "https://pp.vk.me/c638024/v638024144/c752/PsQdafO0mLc.jpg"},
-	{title: "title3", body: "body3", image: "https://pp.vk.me/c626920/v626920367/16b07/EoA_rALAB0c.jpg"}
-	]
-	
-	blogs.forEach(function(blog){
-		Blog.create(blog, function(error, newBlog){
-			if(error)
-				console.log("error on insert")
-		});		
-		console.log("success inserted")
-	});	
-}
-
-function deleteDummyData(){
-	Blog.remove({}, function(error){
-		if(error)
-			console.log("error on delete")
-		else{
-			console.log("success delete")
-			createDummyData();
-		}
-	});
-}
-
-deleteDummyData();
-
-//primitive error handler
-function handle500(response, error){
-	console.log(error.stack);
-	response.status(500);
-	response.json({error: "error: internal server error"});		
-}
-
 //index route
-app.get("/api/blogs", function(request, response){	
-	Blog.find({}, function(error, blogs){
+app.get("/api/blogs", function(request, response){		
+
+	Blog.find({}).sort("-created").limit(15).exec(function(error, blogs){
 		if(error){
 			handle500(response, error);
 		}else{						
