@@ -6,7 +6,7 @@ var mongoose = require("mongoose");
 var expressSanitizer = require("express-sanitizer");
 var {handle500} = require("./lib/utils");
 
-mongoose.connect("mongodb://localhost/blog-react");
+mongoose.connect("mongodb://kurumkan:fhnehbr1@ds115918.mlab.com:15918/blog-react");
 
 //app config
 app.set("view engine", "ejs");
