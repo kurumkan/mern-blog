@@ -1,4 +1,4 @@
-#Node js simple Blog
+#MERN simple Blog
 
 Routes
 
@@ -16,4 +16,4 @@ Routes
 
 
 
-See the <a href="https://immense-beach-53430.herokuapp.com/blogs" target="_blank">demo</a>.
+See the <a href="" target="_blank">demo</a>.

@@ -10,6 +10,7 @@ mongoose.connect("mongodb://localhost/blog-react");
 //app config
 app.set("view engine", "ejs");
 app.use(express.static("public"));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 //must be after parser
 app.use(expressSanitizer());
@@ -28,99 +29,128 @@ var blogSchema = new mongoose.Schema({
 
 var Blog = mongoose.model("Blog", blogSchema);
 
-function handle500(error){
-	console.log(error.stack);
-	response.status(500);
-	response.render("500");
+
+function createDummyData(){
+	var blogs = [
+	{title: "title1", body: "body1", image: "https://pp.vk.me/c636825/v636825284/32767/VsYbJXx9gv0.jpg"},
+	{title: "title2", body: "body2", image: "https://pp.vk.me/c638024/v638024144/c752/PsQdafO0mLc.jpg"},
+	{title: "title3", body: "body3", image: "https://pp.vk.me/c626920/v626920367/16b07/EoA_rALAB0c.jpg"}
+	]
+	
+	blogs.forEach(function(blog){
+		Blog.create(blog, function(error, newBlog){
+			if(error)
+				console.log("error on insert")
+		});		
+		console.log("success inserted")
+	});	
 }
 
-app.get("/", function(request, response){
-	response.redirect("/blogs");
-});
+function deleteDummyData(){
+	Blog.remove({}, function(error){
+		if(error)
+			console.log("error on delete")
+		else{
+			console.log("success delete")
+			createDummyData();
+		}
+	});
+}
 
-app.get("/blogs", function(request, response){
+deleteDummyData();
+
+
+
+
+
+
+function handle500(response, error){
+	console.log(error.stack);
+	response.status(500);
+	response.json({error: "error: internal server error"});		
+}
+
+app.get("/api/blogs", function(request, response){	
 	Blog.find({}, function(error, blogs){
 		if(error){
-			handle500(error);
+			handle500(response, error);
 		}else{			
-			response.render("index", {blogs: blogs});
+			response.json({blogs: blogs});		
 		}
 	});	
 });
 
-app.get("/blogs/new", function(request, response){
-	response.render("new");	
+app.get("/api/blogs/:id", function(request, response){		
+	Blog.findById(request.params.id, function(error, blog){		
+		if(error)
+			handle500(response, error);
+		else
+			response.json({blog: blog});		
+	});	
 });
 
-app.post("/blogs", function(request, response){	
-	var body = {
+app.post("/api/blogs", function(request, response){				
+	var blog = {
 		title: request.sanitize(request.body.title),
 		image: request.sanitize(request.body.image),
 		body: request.sanitize(request.body.body)
-	};
-	Blog.create(body, function(error, newBlog){
-		if(error)
-			handle500(error);
-		else
-			response.redirect("/blogs");
+	};	
+	Blog.create(blog, function(error, newBlog){
+		if(error){			
+			handle500(response, error);
+		}else{			
+			response.json({id: newBlog._id});			
+		}
 	});	
 });
 
-app.get("/blogs/:id", function(request, response){	
-	Blog.findById(request.params.id, function(error, blog){
-		if(error)
-			handle500(error);
-		else
-			response.render("show",{blog: blog});			
-	});	
-});
 
-app.get("/blogs/:id/edit", function(request, response){	
-	Blog.findById(request.params.id, function(error, blog){
-		if(error)
-			handle500(error);
-		else
-			response.render("edit",{blog: blog});			
-	});	
-});
+// app.get("/blogs/:id/edit", function(request, response){	
+// 	Blog.findById(request.params.id, function(error, blog){
+// 		if(error)
+// 			handle500(error);
+// 		else
+// 			response.render("edit",{blog: blog});			
+// 	});	
+// });
 
-app.put("/blogs/:id", function(request, response){	
-	var id = request.params.id;		
-	var body = {
-		title: request.sanitize(request.body.title),
-		image: request.sanitize(request.body.image),
-		body: request.sanitize(request.body.body)
-	}
+// app.put("/blogs/:id", function(request, response){	
+// 	var id = request.params.id;		
+// 	var body = {
+// 		title: request.sanitize(request.body.title),
+// 		image: request.sanitize(request.body.image),
+// 		body: request.sanitize(request.body.body)
+// 	}
 
-	Blog.findByIdAndUpdate(id, body, function(error, blog){
-		if(error)
-			handle500(error);
-		else
-			response.redirect("/blogs/"+id);
-	});
-});
+// 	Blog.findByIdAndUpdate(id, body, function(error, blog){
+// 		if(error)
+// 			handle500(error);
+// 		else
+// 			response.redirect("/blogs/"+id);
+// 	});
+// });
 
-app.delete("/blogs/:id", function(request, response){	
-	var id = request.params.id;			
+// app.delete("/blogs/:id", function(request, response){	
+// 	var id = request.params.id;			
 
-	Blog.findByIdAndRemove(id, function(error){
-		if(error)
-			handle500(error);
-		else
-			response.redirect("/blogs");
-	});
-});
+// 	Blog.findByIdAndRemove(id, function(error){
+// 		if(error)
+// 			handle500(error);
+// 		else
+// 			response.redirect("/blogs");
+// 	});
+// });
 
 
-app.use(function(request, response){	
-	response.status(404);
-	response.render("404");
-});
+// app.use(function(request, response){	
+// 	response.status(404);
+// 	response.render("404");
+// });
 
-//the callback has 4 args so - express treats this as 500 error handler
-app.use(function(error, request, response, next){
-	handle500(error);
-});
+// //the callback has 4 args so - express treats this as 500 error handler
+// app.use(function(error, request, response, next){
+// 	handle500(error);
+// });
 
 //if Process env port is not defined - set 5000 as a port
 app.set("port", process.env.PORT||5000);
