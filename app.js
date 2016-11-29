@@ -10,7 +10,7 @@ mongoose.connect("mongodb://localhost/blog-react");
 //app config
 app.set("view engine", "ejs");
 app.use(express.static("public"));
-app.use(bodyParser.json());
+app.use(bodyParser.json());//must be to work with axios
 app.use(bodyParser.urlencoded({extended: true}));
 //must be after parser
 app.use(expressSanitizer());
@@ -20,8 +20,7 @@ app.use(methodOverride("_method"));
 var blogSchema = new mongoose.Schema({
 	title: String,
 	image: String,
-	body: String,
-	//it should be date. With default value now.
+	body: String,	
 	created: {
 		type: Date, default: Date.now
 	}
@@ -59,27 +58,25 @@ function deleteDummyData(){
 
 deleteDummyData();
 
-
-
-
-
-
+//primitive error handler
 function handle500(response, error){
 	console.log(error.stack);
 	response.status(500);
 	response.json({error: "error: internal server error"});		
 }
 
+//index route
 app.get("/api/blogs", function(request, response){	
 	Blog.find({}, function(error, blogs){
 		if(error){
 			handle500(response, error);
-		}else{			
+		}else{						
 			response.json({blogs: blogs});		
 		}
 	});	
 });
 
+//show route
 app.get("/api/blogs/:id", function(request, response){		
 	Blog.findById(request.params.id, function(error, blog){		
 		if(error)
@@ -89,6 +86,7 @@ app.get("/api/blogs/:id", function(request, response){
 	});	
 });
 
+//create route
 app.post("/api/blogs", function(request, response){				
 	var blog = {
 		title: request.sanitize(request.body.title),
@@ -104,7 +102,7 @@ app.post("/api/blogs", function(request, response){
 	});	
 });
 
-
+//update route
 app.put("/api/blogs/:id", function(request, response){		
 	var id = request.params.id;		
 	var body = {
@@ -122,6 +120,7 @@ app.put("/api/blogs/:id", function(request, response){
 	});
 });
 
+//destroy route
 app.delete("/api/blogs/:id", function(request, response){	
 	var id = request.params.id;			
 
@@ -133,18 +132,6 @@ app.delete("/api/blogs/:id", function(request, response){
 	});
 });
 
-
-// app.use(function(request, response){	
-// 	response.status(404);
-// 	response.render("404");
-// });
-
-// //the callback has 4 args so - express treats this as 500 error handler
-// app.use(function(error, request, response, next){
-// 	handle500(error);
-// });
-
-//if Process env port is not defined - set 5000 as a port
 app.set("port", process.env.PORT||5000);
 
 app.listen(app.get("port"), function(){

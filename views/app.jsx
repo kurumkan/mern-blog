@@ -14,6 +14,7 @@ ReactDOM.render(
 			<Route path="blogs/new" component={NewBlog} />			
 			<Route path="blogs/:id/edit" component={EditBlog} />						
 			<Route path="blogs/:id" component={Blogpost} />	
+			<Route path='404' component={NotFound404} />
 			<Route path='*' component={NotFound404} />			
 		</Route>		
 	</Router>, 

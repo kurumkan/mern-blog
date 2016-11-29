@@ -10,17 +10,20 @@ module.exports = React.createClass({
 	componentWillMount: function(){
 		var _this = this;
 		var id = this.props.params.id;		
+
+		//getting a single blog post and setting it as state		
 		api.getBlogpost(id).then(function(blog){					
 				_this.setState({
 					blog: blog
 				});							
-			}, function(error){	
-				console.log("error", error.message)								
+			}, function(error){		
+			//redirect to NotFound404 component			
+			window.location.hash="#/404";	
 		});		
 	},
 
-	handleDelete: function(e){
-		console.log("handleDelete")		
+	handleDelete: function(e){		
+		//delete this current blogpost and redirect to main page
 		api.deleteBlogpost(this.props.params.id)
 		.then(function(id){					
 			window.location.hash="#/";								
@@ -32,7 +35,7 @@ module.exports = React.createClass({
 	render: function(){	
 	    var blog = this.state.blog;	
 		if(!blog)
-			return <div>Loading ...</div>;
+			return <h3 className="text-center">Loading ...</h3>;
 		
 		var {title, image, body, _id} = blog;		
 		

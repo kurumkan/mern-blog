@@ -12,7 +12,7 @@ module.exports = React.createClass({
 		}			
 	},
 
-	componentWillMount: function() {
+	componentWillMount: function() {		
 		var _this = this;
 		var id = this.props.params.id;		
 		api.getBlogpost(id).then(function(blog){					
@@ -23,7 +23,8 @@ module.exports = React.createClass({
 					id: id
 				});							
 			}, function(error){	
-				console.log("error", error.message)								
+				//redirect to NotFound404 component			
+				window.location.hash="#/404";	
 		});		
 	},
 
