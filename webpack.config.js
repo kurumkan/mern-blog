@@ -23,6 +23,7 @@ module.exports = {
 			NewBlog: "views/components/NewBlog.jsx",	
 			Form: "views/components/Form.jsx",	
 			EditBlog: "views/components/EditBlog.jsx",	
+			NotFound404: "views/components/NotFound404.jsx",	
 		},		
 		//what file extensions?
 		extensions: ['', '.js','.jsx']

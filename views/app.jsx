@@ -6,13 +6,15 @@ var BlogList = require('BlogList');
 var Blogpost = require('Blogpost');
 var NewBlog = require('NewBlog');
 var EditBlog = require('EditBlog');
+var NotFound404 = require('NotFound404');
 ReactDOM.render(
 	<Router history={hashHistory}>	
 		<Route path="/" component={Main}>
 			<IndexRoute component={BlogList} />		
 			<Route path="blogs/new" component={NewBlog} />			
 			<Route path="blogs/:id/edit" component={EditBlog} />						
-			<Route path="blogs/:id" component={Blogpost} />						
+			<Route path="blogs/:id" component={Blogpost} />	
+			<Route path='*' component={NotFound404} />			
 		</Route>		
 	</Router>, 
 
