@@ -1,7 +1,10 @@
 var React = require('react');
+var activeComponent = require('react-router-active-component')
+var {IndexLink} = require("react-router");
 
 module.exports = React.createClass({
-	render: function(){
+	render: function(){		
+		var NavLink=activeComponent('li');
 		return (
 			<nav className="navbar navbar-inverse">
 				<div className="container-fluid">
@@ -11,12 +14,16 @@ module.exports = React.createClass({
 							<span className="icon-bar"></span>
 							<span className="icon-bar"></span>
 						</button>      			
-						<a className="navbar-brand" href="/"><span className="glyphicon glyphicon-star-empty" aria-hidden="true"></span> MERN Blog</a>
+						<IndexLink className="navbar-brand" to="/">
+							<span className="glyphicon glyphicon-star-empty" aria-hidden="true"></span> 
+							MERN Blog
+						</IndexLink>
+						
 					</div>
 					<div className="collapse navbar-collapse" id="navbar">
 						<ul className="nav navbar-nav">
-							<li className="active"><a href="/">Home</a></li>
-							<li><a href="/#/blogs/new">New Post</a></li>				
+							<NavLink to="/" onlyActiveOnIndex>Home</NavLink>							
+							<NavLink to="/blogs/new">New Blogpost</NavLink>							
 						</ul>
 					</div>	
 				</div>
