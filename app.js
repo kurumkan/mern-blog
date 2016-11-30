@@ -5,12 +5,15 @@ var  methodOverride = require("method-override");
 var mongoose = require("mongoose");
 var expressSanitizer = require("express-sanitizer");
 var {handle500} = require("./lib/utils");
+var path =require("path")
 
-mongoose.connect(process.env.MONGOLAB_URI);
+//mongoose.connect(process.env.MONGOLAB_URI);
+mongoose.connect("mongodb://localhost/blog-react");
+
 
 //app config
 app.set("view engine", "ejs");
-app.use(express.static("public"));
+app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());//must be to work with axios
 app.use(bodyParser.urlencoded({extended: true}));
 //must be after parser
@@ -95,6 +98,10 @@ app.delete("/api/blogs/:id", function(request, response){
 		else
 			response.json({id: id});				
 	});
+});
+
+app.get('*', function (request, response){	
+	response.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 });
 
 app.set("port", process.env.PORT||5000);

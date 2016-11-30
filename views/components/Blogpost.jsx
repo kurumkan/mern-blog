@@ -1,7 +1,12 @@
 var React = require('react');
 var api = require('MernBlog');
+var {Link} = require("react-router");
 
 module.exports = React.createClass({
+	contextTypes: {
+        router: React.PropTypes.object.isRequired
+    }, 
+
 	getInitialState: function() {
 		return {
 			blog: null
@@ -15,20 +20,22 @@ module.exports = React.createClass({
 		api.getBlogpost(id).then(function(blog){					
 				_this.setState({
 					blog: blog
-				});							
+				});											
 			}, function(error){		
 			//redirect to NotFound404 component			
-			window.location.hash="#/404";	
+			_this.context.router.replace('404')
 		});		
 	},
 
 	handleDelete: function(e){		
 		//delete this current blogpost and redirect to main page
+		var _this = this;
+		
 		api.deleteBlogpost(this.props.params.id)
 		.then(function(id){					
-			window.location.hash="#/";								
+			_this.context.router.replace('/');
 		}, function(error){	
-			window.location.hash="#/";													
+			_this.context.router.replace('/');
 		});		
 	},
 
@@ -52,7 +59,7 @@ module.exports = React.createClass({
 							</p>
 						</div>
 						<div className="panel-footer text-right">
-							<a href={"/#/blogs/"+_id+"/edit"} className="btn btn-default">Edit</a>	
+							<Link to={"/blogs/"+_id+"/edit"} className="btn btn-success">Edit</Link>										
 							<button className="btn btn-danger" onClick={this.handleDelete} >Delete</button>							
 						</div>
 					</div>	

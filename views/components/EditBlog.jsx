@@ -3,6 +3,9 @@ var Form = require('Form');
 var api = require('MernBlog');
 
 module.exports = React.createClass({
+	contextTypes: {
+        router: React.PropTypes.object.isRequired
+    }, 
 	getInitialState: function() {
 		return {
 			title: "",
@@ -24,7 +27,7 @@ module.exports = React.createClass({
 				});							
 			}, function(error){	
 				//redirect to NotFound404 component			
-				window.location.hash="#/404";	
+				_this.context.router.replace('404')
 		});		
 	},
 
@@ -33,17 +36,18 @@ module.exports = React.createClass({
 		var {title, body, image} = this.state;
 		
 		if(title&&body&&image){
-
+			
 			var blogPost={
 				title: title,
 				image: image,
 				body: body
 			};			
 			var id = this.state.id;
+			var _this=this;
 			api.updateBlogpost(id, blogPost).then(function(data){
-				window.location.hash="#/blogs/"+id;
+				_this.context.router.replace('/blogs/'+id);				
 			}, function(error){
-				window.location.hash="#/";
+				_this.context.router.replace('/');
 			});
 		}		
 	},

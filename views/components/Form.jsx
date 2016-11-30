@@ -1,4 +1,5 @@
 var React = require('react');
+var {Link} = require("react-router");
 
 module.exports = React.createClass({	
 	
@@ -21,8 +22,8 @@ module.exports = React.createClass({
 							<label htmlFor="body">Your Post</label>
 			  				<textarea value={this.props.values.body} onChange={this.props.handleChange('body')} className="form-control" name="body" rows="5" id="body" placeholder="Type here something"  />
 						</div>			
-						<button type="submit" className="btn btn-success">Save</button>
-						<a href="/" className="btn btn-default">Cancel</a>
+						<button type="submit" className="btn btn-success">Save</button>						
+						<Link to="/" className="btn btn-default">Cancel</Link>			
 					</form>
 				</div>
 				<div className="col-md-3"></div>

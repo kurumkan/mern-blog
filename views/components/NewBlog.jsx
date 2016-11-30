@@ -2,7 +2,10 @@ var React = require('react');
 var Form = require('Form');
 var api = require('MernBlog');
 
-module.exports = React.createClass({
+module.exports = React.createClass({	
+	contextTypes: {
+        router: React.PropTypes.object.isRequired
+    }, 
 	getInitialState: function() {
 		return {
 			title: "",
@@ -13,19 +16,19 @@ module.exports = React.createClass({
 
 	handleSubmit: function(e){
 		e.preventDefault();
-		var {title, body, image} = this.state;
-		
-		if(title&&body&&image){
+		var {title, body, image} = this.state;				
 
+		if(title&&body&&image){			
 			var blogPost={
 				title: title,
 				image: image,
 				body: body
 			};			
-			api.createBlogpost(blogPost).then(function(id){
-				window.location.hash="#/blogs/"+id;				
-			}, function(error){				
-				window.location.hash="#/blogs";
+			var _this = this;
+			api.createBlogpost(blogPost).then(function(id){		
+				_this.context.router.replace('/blogs/'+id);
+			}, function(error){									
+				_this.context.router.replace('/')
 			});			
 		}		
 	},

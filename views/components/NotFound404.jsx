@@ -1,4 +1,6 @@
 var React = require('react');
+var {Link} = require("react-router");
+
 
 module.exports = React.createClass({	
 	render: function(){				
@@ -11,7 +13,9 @@ module.exports = React.createClass({
 			    	Use your browsers Back button to navigate to the page you have prevously come from
 			    </p>
 			    <p>Or you could just press this neat little button:</p>
-			    <a href="/" className="btn btn-primary"><i className="glyphicon glyphicon-home"></i>Take Me Home</a>
+			    <Link to="/" className="btn btn-primary" >
+			    	<i className="glyphicon glyphicon-home"></i>Take Me Home	
+			    </Link>						    
 		  	</div>
 		);
 	}
